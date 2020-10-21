@@ -19,11 +19,11 @@ class MovieRepository(abc.ABC):
 class GhibliRepository(MovieRepository):
     BASE_URL = "https://ghibliapi.herokuapp.com"
 
-    def _url(self, uri):
-        return f"{self.BASE_URL}/{uri}"
+    def _uri(self, path):
+        return f"{self.BASE_URL}/{path}"
 
-    def find(self, uri):
-        full_uri = self._url(uri)
+    def find(self, path):
+        full_uri = self._uri(path)
         try:
             resp = requests.get(full_uri)
             if resp.ok:
