@@ -1,6 +1,6 @@
 from json import JSONEncoder
 
-from flask import Flask, jsonify, request, make_response
+from flask import Flask, jsonify, request, make_response, render_template, url_for,redirect
 from flask_cors import CORS
 
 from exceptions import ApiError
@@ -27,13 +27,13 @@ def handle_api_error(e):
     return {"internal_error": e.message}, 500
 
 
-@app.route('/movies/api/films', methods=['GET'])
+@app.route('/api/films', methods=['GET'])
 def get_films():
     films = movie_service.find_films()
     return jsonify(films)
 
 
-@app.route('/movies/api/people', methods=['GET'])
+@app.route('/api/people', methods=['GET'])
 def get_people_by_film():
     film_id = request.args.get("film_id")
     if film_id is None or len(film_id) == 0:
@@ -42,6 +42,16 @@ def get_people_by_film():
     people = movie_service.find_people_by_film(film_id)
 
     return jsonify(people)
+
+
+@app.route('/')
+def redirect_toHome():
+    return redirect(url_for('home'))
+
+
+@app.route('/movies')
+def home():
+    return render_template("index.html")
 
 
 app.json_encoder = MovieEncoder

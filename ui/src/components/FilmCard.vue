@@ -87,7 +87,7 @@ export default {
       if (this.detailsShowed === false) {
         this.$http
           .get(
-            "http://127.0.0.1:5000/movies/api/people?film_id=" + this.film.id
+            "./api/people?film_id=" + this.film.id
           )
           .then((response) => {
             this.people = response.data;

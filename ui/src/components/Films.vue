@@ -22,22 +22,11 @@ export default {
   },
   mounted() {
     this.$http
-      .get("http://127.0.0.1:5000/movies/api/films")
+      .get("./api/films")
       .then((response) => {
         this.films = response.data
         this.films.forEach(film => film.people=[])
       });
-  },
-  methods: {
-    showPeople(index) {
-      const film_id = this.films[index].id
-       this.$http
-      .get("http://127.0.0.1:5000/movies/api/people?film_id="+film_id)
-      .then((response) => {
-        this.films[index].people = response.data
-        this.films[index].peopleShowed=true
-      });
-    },
   }
 };
 </script>

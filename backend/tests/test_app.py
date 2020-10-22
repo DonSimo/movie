@@ -25,7 +25,7 @@ def test_get_films(find_films_mock, client):
         "release_date": "1986",
         "rt_score": "95",
     })]
-    res = client.get("/movies/api/films")
+    res = client.get("/api/films")
     assert res.status_code == 200
     json_res = json.loads(res.data)
     assert "Castle in the Sky" == json_res[0]["title"]
@@ -35,7 +35,7 @@ def test_get_films(find_films_mock, client):
 def test_get_films_when_connection_error_then_should_return_500_status(find_films, client):
     msg = "Failed to connect to https://ghibliapi.herokuapp.com/films"
     find_films.side_effect = ApiError(msg)
-    res = client.get("/movies/api/films")
+    res = client.get("/api/films")
     assert res.status_code == 500
     json_res = json.loads(res.data)
     assert msg in json_res["internal_error"]
@@ -53,9 +53,9 @@ def test_get_people_by_film_id(find_people, client):
         "films": [
             "https://ghibliapi.herokuapp.com/films/2baf70d1-42bb-4437-b551-e5fed5a87abe"
         ]})]
-    res = client.get("/movies/api/people?film_id=2baf70d1-42bb-4437-b551-e5fed5a87abe")
+    res = client.get("/api/people?film_id=2baf70d1-42bb-4437-b551-e5fed5a87abe")
     assert res.status_code == 200
-    json_res = json.loads(res.data)
+    json_res = res.get_json()
     assert 'Pazu' == json_res[0]["name"]
 
 
@@ -71,6 +71,6 @@ def test_get_people_by_film_given_an_empty_film_id_as_param_should_return_400_st
         "films": [
             "https://ghibliapi.herokuapp.com/films/2baf70d1-42bb-4437-b551-e5fed5a87abe"
         ]})]
-    res = client.get("/movies/api/people")
+    res = client.get("/api/people")
     assert res.status_code == 400
     assert b"film_id parameter should not be empty" in res.data
