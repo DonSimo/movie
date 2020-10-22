@@ -2,44 +2,37 @@
   <v-app>
     <v-app-bar
       app
-      color="primary"
-      dark
+      color="brown lighten-5"
+
     >
       <div class="d-flex align-center">
         <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
+          alt="Ghibli Logo"
           contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
+          src="@/assets/ghibli.png"
+          width="140"
         />
       </div>
 
       <v-spacer></v-spacer>
 
       <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
         target="_blank"
         text
       >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
+        <span class="mr-2">Films</span>
+      </v-btn>
+       <v-btn
+        target="_blank"
+        text
+      >
+        <span class="mr-2">People</span>
       </v-btn>
     </v-app-bar>
 
     <v-main>
       <v-container fluid>
-      <HelloWorld/>
+      <Films/>
       </v-container>
     </v-main>
       <v-footer app>
@@ -49,13 +42,13 @@
 </template>
 
 <script>
-import HelloWorld from './components/Films';
+import Films from './components/Films';
 
 export default {
   name: 'App',
 
   components: {
-    HelloWorld,
+    Films,
   },
 
   data: () => ({
