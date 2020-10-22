@@ -49,7 +49,6 @@ def test_find_people(mock_get, ghibli_repo):
 
 @patch("spi.requests.get")
 def test_find_when_failed_to_connect_to_ghibli_api_then_throw_error(mock_get, ghibli_repo):
-    with pytest.raises(ApiError) as error_info:
+    with pytest.raises(ApiError):
         mock_get.side_effect = ConnectionError()
         ghibli_repo.find("films")
-        assert "Failed to connect to " in error_info.message

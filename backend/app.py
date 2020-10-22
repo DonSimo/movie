@@ -9,7 +9,7 @@ from services import MovieService
 from spi import GhibliRepository
 
 app = Flask(__name__)
-CORS(app, resources={r"*": {"origins": "*"}})
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 movie_service = MovieService(GhibliRepository())
@@ -43,9 +43,14 @@ def get_people_by_film():
 
     return jsonify(people)
 
+@app.route('/api/people/all', methods=['GET'])
+def get_all_people():
+    people = movie_service.find_people()
+    return jsonify(people)
+
 
 @app.route('/')
-def redirect_toHome():
+def redirect_to_home():
     return redirect(url_for('home'))
 
 

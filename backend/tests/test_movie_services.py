@@ -68,6 +68,20 @@ def test_find_people_appeared_in_film(movie_service):
     assert "Pazu" in names
 
 
+def test_find_no_people_appeared_in_film(movie_service):
+    film_id = "2baf7021-42bb-4437-b551-e5fed5a87abe"
+    people = movie_service.find_people_by_film(film_id)
+    assert len(people) == 0
+
+
+def test_find_all_people(movie_service):
+    people = movie_service.find_people()
+    assert len(people) > 0
+    names = list(map(lambda character: character.name, people))
+    assert "Pazu" in names
+    assert "Baron Humbert von Gikkingen" in names
+
+
 def test_find_people_by_film_return_empty_list_when_no_people_found_for_film(movie_service):
     film_id = "dummy_id"
     people = movie_service.find_people_by_film(film_id)

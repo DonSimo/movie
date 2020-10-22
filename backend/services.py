@@ -11,3 +11,6 @@ class MovieService:
     def find_people_by_film(self, film_id):
         people = self.repository.find_people()
         return list(filter(lambda character: character.appeard_in(film_id), people))
+
+    def find_people(self):
+        return self.repository.find_people()

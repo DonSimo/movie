@@ -27,7 +27,7 @@ def test_get_films(find_films_mock, client):
     })]
     res = client.get("/api/films")
     assert res.status_code == 200
-    json_res = json.loads(res.data)
+    json_res = res.get_json()
     assert "Castle in the Sky" == json_res[0]["title"]
 
 
@@ -37,7 +37,7 @@ def test_get_films_when_connection_error_then_should_return_500_status(find_film
     find_films.side_effect = ApiError(msg)
     res = client.get("/api/films")
     assert res.status_code == 500
-    json_res = json.loads(res.data)
+    json_res = res.get_json()
     assert msg in json_res["internal_error"]
 
 
@@ -74,3 +74,38 @@ def test_get_people_by_film_given_an_empty_film_id_as_param_should_return_400_st
     res = client.get("/api/people")
     assert res.status_code == 400
     assert b"film_id parameter should not be empty" in res.data
+
+@patch("app.movie_service.find_people")
+def test_find_all_people(find_people, client):
+    find_people.return_value = [Character({
+        "id": "fe93adf2-2f3a-4ec4-9f68-5422f1b87c01",
+        "name": "Pazu",
+        "gender": "Male",
+        "age": "13",
+        "eye_color": "Black",
+        "hair_color": "Brown",
+        "films": [
+            "https://ghibliapi.herokuapp.com/films/2baf70d1-42bb-4437-b551-e5fed5a87abe"
+        ]}),
+        Character({
+                "id": "fc196c4f-0201-4ed2-9add-c6403f7c4d32",
+                "name": "Baron Humbert von Gikkingen",
+                "gender": "Male",
+                "age": "NA",
+                "eye_color": "Green",
+                "hair_color": "Yellow",
+                "films": [
+                    "https://ghibliapi.herokuapp.com/films/ff24da26-a969-4f0e-ba1e-a122ead6c6e3",
+                    "https://ghibliapi.herokuapp.com/films/90b72513-afd4-4570-84de-a56c312fdf81"
+                ],
+            })
+    ]
+    res = client.get("/api/people/all")
+    assert res.status_code == 200
+    json_res = res.get_json()
+    names = list(map(lambda obj: obj["name"], json_res))
+    assert "Pazu" in names
+    assert "Baron Humbert von Gikkingen" in names
+
+
+
