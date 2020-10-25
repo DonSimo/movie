@@ -1,6 +1,7 @@
 import abc
 
 import requests
+import requests_cache
 
 from exceptions import ApiError
 from models import Film, Character
@@ -19,9 +20,16 @@ class MovieRepository(abc.ABC):
     def find_people(self):
         pass
 
+    @abc.abstractmethod
+    def find_character_by_id(self, character_id):
+        pass
+
 
 class GhibliRepository(MovieRepository):
     BASE_URL = "https://ghibliapi.herokuapp.com"
+
+    def __init__(self) -> None:
+        requests_cache.install_cache(cache_name="ghibli_cache", backend="sqlite", expire_after=60)
 
     def _uri(self, path):
         return f"{self.BASE_URL}/{path}"
@@ -50,3 +58,9 @@ class GhibliRepository(MovieRepository):
     def find_people(self):
         json_result = self.find("people")
         return [Character(character_info) for character_info in json_result]
+
+    def find_character_by_id(self, character_id):
+        json_result = self.find(f"people/{character_id}")
+        if json_result is None:
+            return None
+        return Character(json_result)

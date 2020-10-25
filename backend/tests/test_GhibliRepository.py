@@ -93,3 +93,28 @@ def test_find_when_failed_to_connect_to_ghibli_api_then_throw_error(mock_get, gh
     with pytest.raises(ApiError):
         mock_get.side_effect = ConnectionError()
         ghibli_repo.find("films")
+
+
+@patch("spi.requests.get")
+def test_find_character_by_id(mock_get, ghibli_repo):
+    mock_get.return_value.status_code = 200
+    mock_get.return_value.json.return_value = {
+        "id": "fe93adf2-2f3a-4ec4-9f68-5422f1b87c01",
+        "name": "Pazu",
+        "gender": "Male",
+        "age": "13",
+        "eye_color": "Black",
+        "hair_color": "Brown",
+        "films": [
+            "https://ghibliapi.herokuapp.com/films/2baf70d1-42bb-4437-b551-e5fed5a87abe"
+        ]}
+    character = ghibli_repo.find_character_by_id("fe93adf2-2f3a-4ec4-9f68-5422f1b87c01")
+    assert character is not None
+    assert "Pazu" == character.name
+
+
+@patch("spi.requests.get")
+def test_find_character_by_id_when_not_found_then_return_none(mock_get, ghibli_repo):
+    mock_get.return_value.status_code = 404
+    character = ghibli_repo.find_character_by_id("e93adf2-2f3a-4ec4-9f68-5422f1b87c01")
+    assert character is None

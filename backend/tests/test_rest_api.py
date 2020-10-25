@@ -53,6 +53,7 @@ def test_get_film_by_id(find_film, client):
         "rt_score": "95",
     })
     res = client.get("/api/films/baf70d1-42bb-4437-b551-e5fed5a87abe")
+    find_film.assert_called_with("baf70d1-42bb-4437-b551-e5fed5a87abe")
     assert res.status_code == 200
     json_res = res.get_json()
     assert "Castle in the Sky" == json_res["title"]
@@ -62,6 +63,7 @@ def test_get_film_by_id(find_film, client):
 def test_get_film_by_id_return_an_404_error_when_film_id_not_found(find_film, client):
     find_film.return_value = None
     res = client.get("/api/films/baf70d1-42bb-4437-b551-e5fed5a87abe")
+    find_film.assert_called_with("baf70d1-42bb-4437-b551-e5fed5a87abe")
     assert res.status_code == 404
     json_res = res.get_json()
     assert "Film not found with id:  baf70d1-42bb-4437-b551-e5fed5a87abe" == json_res
@@ -80,6 +82,7 @@ def test_get_people_by_film_id(find_people, client):
             "https://ghibliapi.herokuapp.com/films/2baf70d1-42bb-4437-b551-e5fed5a87abe"
         ]})]
     res = client.get("/api/films/2baf70d1-42bb-4437-b551-e5fed5a87abe/people")
+    find_people.assert_called_with("2baf70d1-42bb-4437-b551-e5fed5a87abe")
     assert res.status_code == 200
     json_res = res.get_json()
     assert 'Pazu' == json_res[0]["name"]
@@ -116,3 +119,30 @@ def test_find_all_people(find_people, client):
     names = list(map(lambda obj: obj["name"], json_res))
     assert "Pazu" in names
     assert "Baron Humbert von Gikkingen" in names
+
+
+@patch("app.movie_service.find_character_by_id")
+def test_get_people_by_character_id(find_character, client):
+    find_character.return_value = Character({
+        "id": "fe93adf2-2f3a-4ec4-9f68-5422f1b87c01",
+        "name": "Pazu",
+        "gender": "Male",
+        "age": "13",
+        "eye_color": "Black",
+        "hair_color": "Brown",
+        "films": [
+            "https://ghibliapi.herokuapp.com/films/2baf70d1-42bb-4437-b551-e5fed5a87abe"
+        ]})
+    res = client.get("/api/people/fe93adf2-2f3a-4ec4-9f68-5422f1b87c01")
+    assert find_character.called_with("fe93adf2-2f3a-4ec4-9f68-5422f1b87c01")
+    assert res.status_code == 200
+    res_json = res.get_json()
+    assert "Pazu" == res_json["name"]
+
+
+@patch("app.movie_service.find_character_by_id")
+def test_get_people_by_character_id_return_404_when_no_character_found(find_character, client):
+    find_character.return_value = None
+    res = client.get("/api/people/fe93adf2-2f3a-4ec4-9f68-5422f1b87c01")
+    assert find_character.called_with("fe93adf2-2f3a-4ec4-9f68-5422f1b87c01")
+    assert res.status_code == 404

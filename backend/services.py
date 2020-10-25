@@ -21,3 +21,8 @@ class MovieService:
 
     def find_people(self):
         return self.repository.find_people()
+
+    def find_character_by_id(self, character_id):
+        if character_id is None or len(character_id) == 0:
+            raise ValidationError("Character id should not be empty")
+        return self.repository.find_character_by_id(character_id)

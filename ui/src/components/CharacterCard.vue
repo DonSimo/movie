@@ -1,5 +1,5 @@
 <template>
-  <v-card class="pa-2" width="250"  to="people/1">
+  <v-card class="pa-2" width="250"  :to="'people/'+character.id">
     <v-row no-gutters>
       <v-col offset="3">
         <h4>{{ character.name }}</h4>

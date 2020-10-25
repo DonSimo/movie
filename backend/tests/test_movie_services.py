@@ -61,6 +61,22 @@ class GhibliMockRepo(MovieRepository):
         ]
         return [Character(info) for info in people]
 
+    def find_character_by_id(self, character_id):
+        if character_id == "fe93adf2-2f3a-4ec4-9f68-5422f1b87c01":
+            return Character(
+                {
+                    "id": "fe93adf2-2f3a-4ec4-9f68-5422f1b87c01",
+                    "name": "Pazu",
+                    "gender": "Male",
+                    "age": "13",
+                    "eye_color": "Black",
+                    "hair_color": "Brown",
+                    "films": [
+                        "https://ghibliapi.herokuapp.com/films/2baf70d1-42bb-4437-b551-e5fed5a87abe"
+                    ]
+                })
+        return None
+
 
 @pytest.fixture
 def movie_service():
@@ -82,14 +98,14 @@ def test_find_film_by_id(movie_service):
     assert film.title == "Castle in the Sky"
 
 
-def test_find_film_by_id_throw_an_error_when_given_an_empty_film_id(movie_service):
+def test_find_film_by_id_throw_validation_error_when_given_an_empty_film_id(movie_service):
     with pytest.raises(ValidationError):
         movie_service.find_film_by_id("")
 
 
-def test_find_film_by_id_throw_an_error_when_given_none_as_film_id(movie_service):
+def test_find_film_by_id_throw_validation_error_when_given_none_as_film_id(movie_service):
     with pytest.raises(ValidationError):
-        movie_service.find_film_by_id("")
+        movie_service.find_film_by_id(None)
 
 
 def test_find_people_appeared_in_film(movie_service):
@@ -118,3 +134,20 @@ def test_find_people_by_film_return_empty_list_when_no_people_found_for_film(mov
     film_id = "dummy_id"
     people = movie_service.find_people_by_film(film_id)
     assert len(people) == 0
+
+
+def test_find_character_by_id(movie_service):
+    character_id = "fe93adf2-2f3a-4ec4-9f68-5422f1b87c01"
+    character = movie_service.find_character_by_id(character_id)
+    assert character is not None
+    assert "Pazu" == character.name
+
+
+def test_find_character_by_id_throw_validation_error_when_given_an_empty_id(movie_service):
+    with pytest.raises(ValidationError):
+        movie_service.find_character_by_id("")
+
+
+def test_find_character_by_id_throw_validation_error_when_given_none(movie_service):
+    with pytest.raises(ValidationError):
+        movie_service.find_character_by_id(None)

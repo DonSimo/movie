@@ -10,7 +10,7 @@ from spi import GhibliRepository
 
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
-app.config['CORS_HEADERS'] = 'Content-Type'
+app.config["CORS_HEADERS"] = "Content-Type"
 
 movie_service = MovieService(GhibliRepository())
 
@@ -51,6 +51,14 @@ def get_people_by_film(film_id):
 def get_all_people():
     people = movie_service.find_people()
     return jsonify(people)
+
+
+@app.route('/api/people/<character_id>', methods=['GET'])
+def get_people_by_character_id(character_id):
+    character = movie_service.find_character_by_id(character_id)
+    if character is None:
+        return make_response(jsonify(f"Character not found with id:  {character_id}"), 404)
+    return jsonify(character)
 
 
 @app.route('/')
