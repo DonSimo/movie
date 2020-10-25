@@ -19,6 +19,7 @@ class Character:
         self.gender = info["gender"]
         self.eye_color = info["eye_color"]
         self.hair_color = info["hair_color"]
+        self.age = info["age"]
         self.films = info["films"]
 
     def __eq__(self, other):

@@ -1,8 +1,8 @@
 <template>
-  <v-card class="pa-2" width="250" tile :to="'/films/'+film.id">
+  <v-card class="pa-2" width="250"  to="people/1">
     <v-row no-gutters>
-      <v-col>
-        <h5>{{ film.title }}</h5>
+      <v-col offset="3">
+        <h4>{{ character.name }}</h4>
       </v-col>
     </v-row>
     <v-row no-gutters>
@@ -10,23 +10,20 @@
         <v-card-subtitle>
           <v-row>
             <v-col>
-              ({{ film.release_date }})
+              ({{ character.age }})
             </v-col>
             <v-col>
-              <v-avatar size="20">
-                <v-img src="@/assets/rotten_tomato.svg"/>
-              </v-avatar>
-              <strong>&nbsp;{{ film.rt_score }} %</strong>
+              {{character.gender}}
             </v-col>
           </v-row>
           <v-row>
             <v-col>
-              Director: <strong> {{ film.director }}</strong>
+              Eye color: {{character.eye_color}}
             </v-col>
-          </v-row>
-          <v-row>
+            </v-row>
+            <v-row>
             <v-col>
-              Producer: <strong> {{ film.producer }}</strong>
+              Hair color: {{character.hair_color}}
             </v-col>
           </v-row>
         </v-card-subtitle>
@@ -38,9 +35,9 @@
 
 <script>
 export default {
-  name: "FilmCard",
+  name: "CharacterCard",
   props: {
-    film: {
+    character: {
       type: Object,
       required: true,
     },

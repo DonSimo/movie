@@ -1,6 +1,6 @@
 from json import JSONEncoder
 
-from flask import Flask, jsonify, request, make_response, render_template, url_for,redirect
+from flask import Flask, jsonify, render_template, url_for, redirect, make_response
 from flask_cors import CORS
 
 from exceptions import ApiError
@@ -33,17 +33,21 @@ def get_films():
     return jsonify(films)
 
 
-@app.route('/api/people', methods=['GET'])
-def get_people_by_film():
-    film_id = request.args.get("film_id")
-    if film_id is None or len(film_id) == 0:
-        return make_response(jsonify({"error": "film_id parameter should not be empty"}), 400)
+@app.route('/api/films/<film_id>', methods=['GET'])
+def get_film_by_id(film_id):
+    film = movie_service.find_film_by_id(film_id)
+    if film is None:
+        return make_response(jsonify(f"Film not found with id:  {film_id}"), 404)
+    return jsonify(film)
 
+
+@app.route('/api/films/<film_id>/people', methods=['GET'])
+def get_people_by_film(film_id):
     people = movie_service.find_people_by_film(film_id)
-
     return jsonify(people)
 
-@app.route('/api/people/all', methods=['GET'])
+
+@app.route('/api/people', methods=['GET'])
 def get_all_people():
     people = movie_service.find_people()
     return jsonify(people)

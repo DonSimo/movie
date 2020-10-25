@@ -1,11 +1,26 @@
 import pytest
 
+from exceptions import ValidationError
 from models import Film, Character
 from services import MovieService
 from spi import MovieRepository
 
 
 class GhibliMockRepo(MovieRepository):
+    def find_film_by_id(self, film_id):
+        if film_id == "2baf70d1-42bb-4437-b551-e5fed5a87abe":
+            return Film({
+                "id": "2baf70d1-42bb-4437-b551-e5fed5a87abe",
+                "title": "Castle in the Sky",
+                "description": "The orphan Sheeta inherited a mysterious crystal that links "
+                               "her to the mythical sky-kingdom of Laputa. ",
+                "director": "Hayao Miyazaki",
+                "producer": "Isao Takahata",
+                "release_date": "1986",
+                "rt_score": "95",
+            })
+        return None
+
     def find_films(self):
         films = [{
             "id": "2baf70d1-42bb-4437-b551-e5fed5a87abe",
@@ -58,6 +73,23 @@ def test_find_films(movie_service):
     title = "Castle in the Sky"
     titles = list(map(lambda film: film.title, films))
     assert title in titles
+
+
+def test_find_film_by_id(movie_service):
+    film_id = "2baf70d1-42bb-4437-b551-e5fed5a87abe"
+    film = movie_service.find_film_by_id(film_id)
+    assert film is not None
+    assert film.title == "Castle in the Sky"
+
+
+def test_find_film_by_id_throw_an_error_when_given_an_empty_film_id(movie_service):
+    with pytest.raises(ValidationError):
+        movie_service.find_film_by_id("")
+
+
+def test_find_film_by_id_throw_an_error_when_given_none_as_film_id(movie_service):
+    with pytest.raises(ValidationError):
+        movie_service.find_film_by_id("")
 
 
 def test_find_people_appeared_in_film(movie_service):

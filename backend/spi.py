@@ -12,6 +12,10 @@ class MovieRepository(abc.ABC):
         pass
 
     @abc.abstractmethod
+    def find_film_by_id(self, film_id):
+        pass
+
+    @abc.abstractmethod
     def find_people(self):
         pass
 
@@ -26,14 +30,22 @@ class GhibliRepository(MovieRepository):
         full_uri = self._uri(path)
         try:
             resp = requests.get(full_uri)
-            if resp.ok:
+            if resp.status_code == 200:
                 return resp.json()
+            else:
+                return None
         except ConnectionError:
             raise ApiError(f"Failed to connect to {full_uri}")
 
     def find_films(self):
         json_result = self.find("films")
         return [Film(film_info) for film_info in json_result]
+
+    def find_film_by_id(self, film_id):
+        json_result = self.find(f"films/{film_id}")
+        if json_result is None:
+            return None
+        return Film(json_result)
 
     def find_people(self):
         json_result = self.find("people")
