@@ -1,8 +1,8 @@
 # Movie List
-This application lists all films from [Studio Ghibli](http://www.ghibli.jp/), using the following REST API:
+This web application lists all  [Studio Ghibli](http://www.ghibli.jp/) productions, using the following REST API:
 * https://ghibliapi.herokuapp.com/
 
-This application serves a page on [localhost:8000/movies](). This page lists all movies from Ghibli API.
+Home page listing all movies from Ghibli API is accessible at :  [localhost:8000/movies](). 
 
 ## Technical environment
 
@@ -27,18 +27,23 @@ Install packages
 ```shell script
  npm install
 ```
-Compiles and minifies for production 
+Compile and minify for production 
 ```shell script
 npm run build
 ```
 
 ## Build Back-end
 
-setting up venv
+Set up venv
 
 ```shell script
 python3 -m venv <your_venv>
 source <your_venv>/bin/activate 
+```
+or 
+```shell script
+python3 -m venv <your_venv>
+source <your_venv>/Scripts/activate 
 ```
 
 Install packages
@@ -49,11 +54,11 @@ Run the application
 ```shell script
 python3 backend/app.py
 ```
-Testing
+Test  the application
 ```shell script
 pytest -v backend/tests
 ```
-Testing with coverage
+Test the application with coverage
 ```shell script
 pytest -v --cov-report term --cov=backend . 
 ```
