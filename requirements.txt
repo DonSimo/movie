@@ -28,5 +28,5 @@ requests-cache==0.5.2
 six==1.15.0
 toml==0.10.2
 urllib3==1.25.11
-Werkzeug==1.0.1
+Werkzeug==3.0.1
 wrapt==1.12.1
